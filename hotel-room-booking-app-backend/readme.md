@@ -66,6 +66,8 @@ Start the server
 npm start
 ```
 
+If your deploying server on `https://render.com/` then you have to change build cmd `yarn` to `yarn install --ignore-engines`
+
 ## Author
 
 - [Saurav Hathi](https://github.com/sauravhathi)
