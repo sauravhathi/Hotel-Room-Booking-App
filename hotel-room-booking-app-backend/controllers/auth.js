@@ -25,7 +25,6 @@ const authController = {
 
       await user.save();
       console.log('User saved to database');
-      console.log(user);
       res.status(200).json({ msg: 'User registered successfully' });
     } catch (err) {
       console.error(err.message);
@@ -47,7 +46,6 @@ const authController = {
         console.log('Password does not match');
         return res.status(400).json({ msg: 'Invalid credentials' });
       }
-      console.log('Password matches');
       const payload = {
         user: {
           id: user.id
@@ -65,7 +63,6 @@ const authController = {
           res.json({ token });
         }
       );
-      console.log('JWT signed');
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
@@ -74,7 +71,6 @@ const authController = {
 
   async profile(req, res) {
     try {
-      console.log(req.header('token'));
       const token = req.header('token');
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       const userId = decoded.user.id;

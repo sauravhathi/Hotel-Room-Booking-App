@@ -46,9 +46,7 @@ const Hotels = () => {
             if (available) params.available = available;
             if (inDate) params.inDate = inDate;
             if (outDate) params.outDate = outDate;
-            console.log(params);
             const res = await axios.get('/api/hotels', { params });
-            console.log(res.data.hotels);
             setHotels(res.data.hotels);
         } catch (err) {
             console.log(err);
@@ -61,18 +59,18 @@ const Hotels = () => {
             isUseEffectCalled = true;
             fetchHotels();
             fetchUser();
-            console.log('useEffect called');
         }
     }, [query, location, price, type, available, inDate, outDate]);
 
     const fetchUser = async () => {
         try {
+            if (localStorage.getItem('token') === null) return;
+
             const res = await axios.get('/api/auth/profile', {
                 headers: {
                     'token': localStorage.getItem('token')
                 }
             });
-            console.log(res.data);
             setUser(res.data);
             setWhishlist(res.data.whishlist);
             setIsWhishlist(res.data.whishlist);
@@ -83,12 +81,15 @@ const Hotels = () => {
 
     const addTowishlist = async (hotel) => {
         try {
+        if (localStorage.getItem('token') === null) {
+            alert('Please login to add to wishlist');
+            return;
+        }
           const res = await axios.post('/api/auth/addTowishlist', { hotel }, {
             headers: {
                 'token': localStorage.getItem('token')
             }
             });
-            console.log(res.data);
             fetchUser();
         } catch (err) {
             console.log(err);
@@ -102,7 +103,6 @@ const Hotels = () => {
                     'token': localStorage.getItem('token')
                 }
             });
-            console.log(res.data);
             fetchUser();
         } catch (err) {
             console.log(err);

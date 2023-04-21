@@ -6,7 +6,6 @@ import { AppContext } from '../hotels/AppContext';
 
 const Header = () => {
     const { isWhishlist, setIsWhishlist } = useContext(AppContext);
-    console.log('isWhishlist', isWhishlist);
 
     const logout = () => {
         localStorage.removeItem('token');

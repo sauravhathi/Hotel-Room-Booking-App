@@ -30,7 +30,6 @@ const createHotel = async (req, res) => {
 
 // Get all hotels
 const getAllHotels = async (req, res) => {
-    console.log(req.query);
     const { query, location, price, type, available, inDate, outDate } = req.query;
     const filters = {};
     if (query) {
@@ -67,7 +66,6 @@ const getAllHotels = async (req, res) => {
     }
     try {
         const hotels = await Hotel.find(filters);
-        console.log(hotels);
         res.status(200).json({ hotels });
     } catch (error) {
         console.error(error);

@@ -1,6 +1,7 @@
 {
   "name": "hotel-room-booking-app-frontend",
   "proxy": "http://localhost:5000",
+  "author": "Saurav Hathi",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

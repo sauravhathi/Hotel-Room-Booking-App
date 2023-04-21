@@ -29,7 +29,6 @@ const Login = () => {
             const body = JSON.stringify(newUser);
 
             const res = await axios.post('/api/auth/login', body, config);
-            console.log(res.data);
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
                 window.location.href = '/';

@@ -8,10 +8,6 @@ const Search = () => {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('city', city);
-        console.log('checkIn', checkIn);
-        console.log('checkOut', checkOut);
-        console.log('guests', guests);
     };
     
     return (
