@@ -75,6 +75,7 @@ const Hotels = () => {
         if (!isUseEffectCalled) {
             isUseEffectCalled = true;
             fetchHotels();
+            console.log(hotels)
             fetchUser();
         }
     }, [debouncedQuery, location, price, type, available, inDate, outDate]);
