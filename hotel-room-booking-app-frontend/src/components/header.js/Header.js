@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { RiLogoutCircleRLine } from "react-icons/ri";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineHeart, AiOutlineLogin } from "react-icons/ai";
 import React, { useContext } from 'react';
 import { AppContext } from '../hotels/AppContext';
 
@@ -16,7 +16,7 @@ const Header = () => {
             <h1 className='text-2xl md:text-3xl font-bold'>
                 <Link to='/'>Hotel Booking</Link>
             </h1>
-            <div className='flex items-center'>
+            <div className='flex flex-col md:flex-row  items-start'>
                 <Link to='/' className='flex items-center text-gray-600 hover:text-red-500 mr-4'>
                     {
                         isWhishlist.length === 0 ? (
@@ -27,10 +27,19 @@ const Header = () => {
                     }
                     Whishlist<sup className='w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center'>{isWhishlist.length}</sup>
                 </Link>
-                <Link to='/login' onClick={logout} className='flex items-center text-gray-600 hover:text-red-500'>
-                    <RiLogoutCircleRLine className='h-5 w-5 mr-2' />
-                    Logout
-                </Link>
+                {
+                    localStorage.getItem('token') ? (
+                        <Link to='/login' onClick={logout} className='flex items-center text-gray-600 hover:text-red-500'>
+                            <RiLogoutCircleRLine className='h-5 w-5 mr-2' />
+                            Logout
+                        </Link>
+                    ) : (
+                        <Link to='/login' className='flex items-center text-gray-600 hover:text-red-500'>
+                            <AiOutlineLogin className='h-5 w-5 mr-2' />
+                            Login
+                        </Link>
+                    )
+                }
             </div>
         </div>
     )

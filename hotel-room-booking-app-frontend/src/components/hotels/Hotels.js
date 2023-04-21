@@ -1,9 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BsSearch } from "react-icons/bs";
 import { AiFillHeart, AiFillStar, AiOutlineHeart } from "react-icons/ai";
 import { AppContext } from './AppContext';
+
+export function useDebounce(value, delay) {
+    const [debouncedValue, setDebouncedValue] = useState(value)
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value)
+        }, delay)
+        return () => {
+            clearTimeout(handler)
+        }
+    }, [value, delay])
+    return debouncedValue
+}
 
 const Hotels = () => {
 
@@ -11,6 +24,7 @@ const Hotels = () => {
     const { isWhishlist, setIsWhishlist } = React.useContext(AppContext);
     const [user, setUser] = React.useState(null);
     const [error, setError] = React.useState('');
+    const [loading, setLoading] = React.useState(false);
     const [query, setQuery] = React.useState('');
     const [whishlist, setWhishlist] = React.useState([]);
     const [location, setLocation] = React.useState('');
@@ -19,6 +33,7 @@ const Hotels = () => {
     const [available, setAvailable] = React.useState(false);
     const [inDate, setInDate] = React.useState('');
     const [outDate, setOutDate] = React.useState('');
+    const debouncedQuery = useDebounce(query, 250);
 
     const LocationOptions = ['Hyderabad', 'Bangalore', 'Chennai', 'Mumbai', 'Delhi', 'Kolkata', 'Pune', 'Jaipur', 'Lucknow', 'Goa', 'Kochi', 'Chandigarh', 'Agra', 'Vizag', 'Nagpur', 'Indore', 'Patna', 'Bhopal', 'Vadodara', 'Ghaziabad', 'Coimbatore', 'Nashik', 'Faridabad', 'Meerut', 'Rajkot'];
     const TypeOptions = ['Classic', 'Club', 'Deluxe', 'Suite', 'Presidential', 'Luxury', 'Superior', 'Standard'];
@@ -46,8 +61,10 @@ const Hotels = () => {
             if (available) params.available = available;
             if (inDate) params.inDate = inDate;
             if (outDate) params.outDate = outDate;
+            setLoading(true);
             const res = await axios.get('/api/hotels', { params });
             setHotels(res.data.hotels);
+            setLoading(false);
         } catch (err) {
             console.log(err);
         }
@@ -60,7 +77,7 @@ const Hotels = () => {
             fetchHotels();
             fetchUser();
         }
-    }, [query, location, price, type, available, inDate, outDate]);
+    }, [debouncedQuery, location, price, type, available, inDate, outDate]);
 
     const fetchUser = async () => {
         try {
@@ -81,14 +98,14 @@ const Hotels = () => {
 
     const addTowishlist = async (hotel) => {
         try {
-        if (localStorage.getItem('token') === null) {
-            alert('Please login to add to wishlist');
-            return;
-        }
-          const res = await axios.post('/api/auth/addTowishlist', { hotel }, {
-            headers: {
-                'token': localStorage.getItem('token')
+            if (localStorage.getItem('token') === null) {
+                alert('Please login to add to wishlist');
+                return;
             }
+            const res = await axios.post('/api/auth/addTowishlist', { hotel }, {
+                headers: {
+                    'token': localStorage.getItem('token')
+                }
             });
             fetchUser();
         } catch (err) {
@@ -156,59 +173,66 @@ const Hotels = () => {
                         </div>
                     </div>
                 </div>
-                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                    {hotels.map((hotel, index) => (
-                        <div key={index} className='transition duration-500 ease-in-out transform hover:-translate-y-2 bg-white rounded-lg shadow-lg overflow-hidden'>
-                            <div className='relative'>
-                                <img src={hotel.thumbnail} alt={hotel.name} className='h-48 w-full object-cover' />
-                                {hotel.totalBookings > 1000 ? (
-                                    <div className='absolute top-0 left-0 bg-red-500 text-white px-2 py-1 text-xs font-semibold uppercase'>Popular</div>
-                                ) : hotel.totalBookings > 500 ? (
-                                    <div className='absolute top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs font-semibold uppercase'>Best Seller</div>
-                                ) : null}
-                                <div className='absolute top-0 right-0 m-4'>
-                                    {
-                                        whishlist.includes(hotel._id) ? (
-                                            <AiFillHeart className='h-6 w-6 text-red-500 cursor-pointer' onClick={() => removeFromWishlist(hotel._id)} />
-                                        ) : (
-                                            <AiOutlineHeart className='h-6 w-6 text-red-500 cursor-pointer' onClick={() => addTowishlist(hotel._id)} />
-                                        )
-                                    }
+                {!loading ? (
+                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                        {hotels.map((hotel, index) => (
+                            <div key={index} className='transition duration-500 ease-in-out transform hover:-translate-y-2 bg-white rounded-lg shadow-lg overflow-hidden'>
+                                <div className='relative'>
+                                    <img src={hotel.thumbnail} alt={hotel.name} className='h-48 w-full object-cover' />
+                                    {hotel.totalBookings > 1000 ? (
+                                        <div className='absolute top-0 left-0 bg-red-500 text-white px-2 py-1 text-xs font-semibold uppercase'>Popular</div>
+                                    ) : hotel.totalBookings > 500 ? (
+                                        <div className='absolute top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs font-semibold uppercase'>Best Seller</div>
+                                    ) : null}
+                                    <div className='absolute top-0 right-0 m-4'>
+                                        {
+                                            whishlist.includes(hotel._id) ? (
+                                                <AiFillHeart className='h-6 w-6 text-red-500 cursor-pointer' onClick={() => removeFromWishlist(hotel._id)} />
+                                            ) : (
+                                                <AiOutlineHeart className='h-6 w-6 text-red-500 cursor-pointer' onClick={() => addTowishlist(hotel._id)} />
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                                <div className='p-4'>
+                                    <h1 className='text-lg font-semibold text-gray-700'>{hotel.name}</h1>
+                                    <div className='flex items-center mt-2'>
+                                        {[...Array(Math.round(hotel.rating))].map((_, index) => (
+                                            <AiFillStar key={index} className='h-4 w-4 text-yellow-400' />
+                                        ))}
+                                        {[...Array(5 - Math.round(hotel.rating))].map((_, index) => (
+                                            <AiFillStar key={index} className='h-4 w-4 text-gray-400' />
+                                        ))}
+                                        <span className='text-sm font-semibold text-gray-500 ml-2'>{hotel.rating}</span>
+                                    </div>
+                                    <div className='flex items-center mt-2'>
+                                        <span className='text-sm font-semibold text-gray-500'>{hotel.type}</span>
+                                    </div>
+                                </div>
+                                <div className='flex items-center justify-between px-4 py-2 bg-gray-100'>
+                                    <div className='flex items-center'>
+                                        <span className='text-sm font-semibold text-gray-500'>From</span>
+                                        <span className='text-lg font-semibold text-gray-700 ml-2'>
+                                            ₹{hotel.minPrice} ~ ₹{hotel.maxPrice}
+                                        </span>
+                                    </div>
+                                    <button
+                                        className='bg-indigo-500 text-white text-sm font-semibold px-6 py-2 rounded-lg hover:bg-indigo-600 tracking-widest'
+                                        onClick={() => navigate(`/hotels/${hotel._id}`)}
+                                    >
+                                        Deal
+                                    </button>
                                 </div>
                             </div>
-                            <div className='p-4'>
-                                <h1 className='text-lg font-semibold text-gray-700'>{hotel.name}</h1>
-                                <div className='flex items-center mt-2'>
-                                    {[...Array(Math.round(hotel.rating))].map((_, index) => (
-                                        <AiFillStar key={index} className='h-4 w-4 text-yellow-400' />
-                                    ))}
-                                    {[...Array(5 - Math.round(hotel.rating))].map((_, index) => (
-                                        <AiFillStar key={index} className='h-4 w-4 text-gray-400' />
-                                    ))}
-                                    <span className='text-sm font-semibold text-gray-500 ml-2'>{hotel.rating}</span>
-                                </div>
-                                <div className='flex items-center mt-2'>
-                                    <span className='text-sm font-semibold text-gray-500'>{hotel.type}</span>
-                                </div>
-                            </div>
-                            <div className='flex items-center justify-between px-4 py-2 bg-gray-100'>
-                                <div className='flex items-center'>
-                                    <span className='text-sm font-semibold text-gray-500'>From</span>
-                                    <span className='text-lg font-semibold text-gray-700 ml-2'>
-                                        ₹{hotel.minPrice} ~ ₹{hotel.maxPrice}
-                                    </span>
-                                </div>
-                                <button
-                                    className='bg-indigo-500 text-white text-sm font-semibold px-6 py-2 rounded-lg hover:bg-indigo-600 tracking-widest'
-                                    onClick={() => navigate(`/hotels/${hotel._id}`)}
-                                >
-                                    Deal
-                                </button>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                ) : (
+                    <div className='flex items-center justify-center'>
+                        <div className='animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900'></div>
+                    </div>
+
+                )}
                 </div>
-            </div>
         </div>
     );
 };
