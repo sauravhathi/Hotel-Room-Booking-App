@@ -75,7 +75,6 @@ const Hotels = () => {
         if (!isUseEffectCalled) {
             isUseEffectCalled = true;
             fetchHotels();
-            console.log(hotels)
             fetchUser();
         }
     }, [debouncedQuery, location, price, type, available, inDate, outDate]);
@@ -125,6 +124,16 @@ const Hotels = () => {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    if (loading && hotels.length === 0) {
+        console.log("loading useEffect", loading)
+        console.log("hotels", hotels.length)
+        return (
+            <div className='flex justify-center items-center h-screen'>
+                <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900'></div>
+            </div>
+        )
     }
 
     return (
