@@ -126,9 +126,7 @@ const Hotels = () => {
         }
     }
 
-    if (loading && hotels.length === 0) {
-        console.log("loading useEffect", loading)
-        console.log("hotels", hotels.length)
+    if (loading) {
         return (
             <div className='flex justify-center items-center h-screen'>
                 <div className='animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900'></div>
@@ -185,7 +183,7 @@ const Hotels = () => {
                 </div>
                 {!loading ? (
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                        {hotels.map((hotel, index) => (
+                        {hotels && hotels.map((hotel, index) => (
                             <div key={index} className='transition duration-500 ease-in-out transform hover:-translate-y-2 bg-white rounded-lg shadow-lg overflow-hidden'>
                                 <div className='relative'>
                                     <img src={hotel.thumbnail} alt={hotel.name} className='h-48 w-full object-cover' />
