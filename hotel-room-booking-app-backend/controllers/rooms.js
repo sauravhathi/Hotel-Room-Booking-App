@@ -2,7 +2,7 @@ const Room = require('../models/room');
 
 // Create a new room
 const createRoom = async (req, res) => {
-  const { roomNumber, type, price, description, hotel } = req.body;
+  const { roomNumber, type, price, description,available, hotel } = req.body;
 
   try {
     const room = await Room.create({
@@ -10,6 +10,7 @@ const createRoom = async (req, res) => {
       type,
       price,
       description,
+      available,
       hotel
     });
 
@@ -57,12 +58,13 @@ const updateRoom = async (req, res) => {
       return res.status(404).json({ message: 'Room not found' });
     }
 
-    const { roomNumber, type, price, description, hotel } = req.body;
+    const { roomNumber, type, price, description, available, hotel } = req.body;
 
     if (roomNumber) room.roomNumber = roomNumber;
     if (type) room.type = type;
     if (price) room.price = price;
     if (description) room.description = description;
+    if (available) room.available = available;
     if (hotel) room.hotel = hotel;
 
     await room.save();

@@ -17,6 +17,10 @@ const roomSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  available: {
+    type: Boolean,
+    required: true
+  },
   hotel: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Hotel',
