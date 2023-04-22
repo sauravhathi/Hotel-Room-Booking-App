@@ -9,9 +9,6 @@
     "start": "nodemon server.js",
     "dev": "nodemon server.js"
   },
-  "engines": {
-    "node": ">=14 <15"
-  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",

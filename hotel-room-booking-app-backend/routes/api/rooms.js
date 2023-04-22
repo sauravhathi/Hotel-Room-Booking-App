@@ -8,6 +8,9 @@ router.post('/', roomsController.createRoom);
 // Get all rooms
 router.get('/', roomsController.getAllRooms);
 
+// Get all rooms by hotel id
+router.get('/rooms/:hotelId', roomsController.getAllRoomsByHotelId);
+
 // Delete a room
 router.delete('/:id', roomsController.deleteRoom);
 

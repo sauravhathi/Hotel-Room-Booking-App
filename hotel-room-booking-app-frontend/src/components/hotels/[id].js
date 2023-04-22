@@ -5,11 +5,23 @@ function HotelDetails() {
   const { id } = useParams();
 
   const [hotel, setHotel] = useState(null);
+  const [rooms, setRooms] = useState(null);
+
+  const getRooms = async () => {
+    try {
+      const res = await fetch(`/api/rooms/rooms/${id}`);
+      const data = await res.json();
+      setRooms(data.rooms);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetch(`/api/hotels/${id}`)
       .then((res) => res.json())
       .then((data) => setHotel(data.hotel));
+    getRooms();
   }, [id]);
 
   return (
@@ -76,6 +88,44 @@ function HotelDetails() {
                   key={index}
                 />
               ))}
+            </div>
+          </div>
+          {/* "roomNumber": "102",
+          "type": "Standard",
+          "price": 3000,
+          "description": "A cozy room with a queen-sized bed and a window facing the street.",
+          "available": false, */}
+          <div className="flex flex-col">
+            <h1 className="text-xl font-bold text-gray-900 mt-4 mb-2">
+              Rooms
+            </h1>
+            {/* if not available then booked color red */}
+            {/* roomnumber show in box full width */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+              {rooms &&
+                rooms.map((room, index) => (
+                  <div
+                    key={index}
+                    className={`shadow-md rounded-lg px-4 py-1 tracking-wide transition duration-500 ease-in-out transform hover:-translate-y-1 bg-gray-100 text-gray-600 mr-2 mt-2 ${room.available ? 'bg-green-100' : 'bg-red-100'
+                      }`}
+                  >
+                    <div className="flex flex-col">
+                      <h1 className="text-xl font-bold text-gray-900">
+                        {room.roomNumber}
+                      </h1>
+                      <p className={`text-gray-600 w-fit px-1 rounded-sm ${room.available ? 'text-white bg-green-500' : 'text-white bg-red-500' }
+                      `}>
+                        {room.available ? "Available"
+                        :
+                        "Booked"
+                        }
+                      </p>
+                      <p className="text-gray-600">{room.type}</p>
+                      <p className="text-gray-600">{room.price}</p>
+                      <p className="text-gray-600">{room.description}</p>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>

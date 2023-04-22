@@ -33,6 +33,18 @@ const getAllRooms = async (req, res) => {
   }
 };
 
+// Get all rooms by hotel id
+const getAllRoomsByHotelId = async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const rooms = await Room.find({ hotel: hotelId });
+    res.status(200).json({ rooms });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
 const deleteRoom = async (req, res) => {
   try {
     const room = await Room.findById(req.params.id);
@@ -79,6 +91,7 @@ const updateRoom = async (req, res) => {
 module.exports = {
   createRoom,
   getAllRooms,
+  getAllRoomsByHotelId,
   deleteRoom,
   updateRoom
 };
