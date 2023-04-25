@@ -12,6 +12,7 @@ const Register = () => {
     });
 
     const { name, email, password, adharcard, phone } = formData;
+    const apiEndpoint = process.env.REACT_APP_API_ENDPOINT+'/api';
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -34,7 +35,7 @@ const Register = () => {
 
             const body = JSON.stringify(newUser);
 
-            const res = await axios.post('/api/auth/register', body, config);
+            const res = await axios.post(apiEndpoint+'/auth/register', body, config);
             console.log(res.data);
             if (res.status === 200) {
                 window.location.href = '/login';

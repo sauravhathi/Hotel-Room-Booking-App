@@ -2,10 +2,6 @@
 
 This is a full stack web application built using React, Node.js, Express, and MongoDB. It is a hotel room booking app where users can book a room in a hotel of their choice. Users can also add hotels to their wishlist and view their bookings and wishlist.
 
-## Demo
-
-https://hotel-room-booking-app.netlify.app/
-
 ## Routes
 
 - POST /api/auth/register

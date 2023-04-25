@@ -34,6 +34,7 @@ const Hotels = () => {
     const [inDate, setInDate] = React.useState('');
     const [outDate, setOutDate] = React.useState('');
     const debouncedQuery = useDebounce(query, 250);
+    const apiEndpoint = process.env.REACT_APP_API_ENDPOINT+'/api';
 
     const LocationOptions = ['Hyderabad', 'Bangalore', 'Chennai', 'Mumbai', 'Delhi', 'Kolkata', 'Pune', 'Jaipur', 'Lucknow', 'Goa', 'Kochi', 'Chandigarh', 'Agra', 'Vizag', 'Nagpur', 'Indore', 'Patna', 'Bhopal', 'Vadodara', 'Ghaziabad', 'Coimbatore', 'Nashik', 'Faridabad', 'Meerut', 'Rajkot'];
     const TypeOptions = ['Classic', 'Club', 'Deluxe', 'Suite', 'Presidential', 'Luxury', 'Superior', 'Standard'];
@@ -62,7 +63,7 @@ const Hotels = () => {
             if (inDate) params.inDate = inDate;
             if (outDate) params.outDate = outDate;
             setLoading(true);
-            const res = await axios.get('/api/hotels', { params });
+            const res = await axios.get(apiEndpoint+'/hotels', { params });
             setHotels(res.data.hotels);
             setLoading(false);
         } catch (err) {
@@ -83,7 +84,7 @@ const Hotels = () => {
         try {
             if (localStorage.getItem('token') === null) return;
 
-            const res = await axios.get('/api/auth/profile', {
+            const res = await axios.get(apiEndpoint+'/auth/profile', {
                 headers: {
                     'token': localStorage.getItem('token')
                 }
@@ -102,7 +103,7 @@ const Hotels = () => {
                 alert('Please login to add to wishlist');
                 return;
             }
-            const res = await axios.post('/api/auth/addTowishlist', { hotel }, {
+            const res = await axios.post(apiEndpoint+'/auth/addTowishlist', { hotel }, {
                 headers: {
                     'token': localStorage.getItem('token')
                 }
@@ -115,7 +116,7 @@ const Hotels = () => {
 
     const removeFromWishlist = async (hotel) => {
         try {
-            const res = await axios.post('/api/auth/removeFromWishlist', { hotel }, {
+            const res = await axios.post(apiEndpoint+'/auth/removeFromWishlist', { hotel }, {
                 headers: {
                     'token': localStorage.getItem('token')
                 }
@@ -240,7 +241,7 @@ const Hotels = () => {
                     </div>
 
                 )}
-                </div>
+            </div>
         </div>
     );
 };

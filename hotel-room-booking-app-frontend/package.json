@@ -1,7 +1,6 @@
 {
   "name": "hotel-room-booking-app-frontend",
   "homepage": "https://hotel-room-booking-app-omega.vercel.app/",
-  "proxy": "https://hotel-room-booking-obg3.onrender.com",
   "author": "Saurav Hathi",
   "version": "0.1.0",
   "private": true,
@@ -10,6 +9,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.3.6",
+    "dotenv": "^16.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",

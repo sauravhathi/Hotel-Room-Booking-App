@@ -9,6 +9,7 @@ const Login = () => {
     });
 
     const { email, password } = formData;
+    const apiEndpoint = process.env.REACT_APP_API_ENDPOINT+'/api';
 
     const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -28,7 +29,7 @@ const Login = () => {
 
             const body = JSON.stringify(newUser);
 
-            const res = await axios.post('/api/auth/login', body, config);
+            const res = await axios.post(apiEndpoint+'/auth/login', body, config);
             if (res.data.token) {
                 localStorage.setItem('token', res.data.token);
                 window.location.href = '/';
