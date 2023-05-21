@@ -2,6 +2,9 @@
 
 This is a full stack web application built using React, Node.js, Express, and MongoDB. It is a hotel room booking app where users can book a room in a hotel of their choice. Users can also add hotels to their wishlist and view their bookings and wishlist.
 
+## Demo
+### https://hotel-room-booking-app.onrender.com/
+
 ## Screenshots
 ![image](https://user-images.githubusercontent.com/53424917/233553747-8c6eab14-e6df-47fe-a231-4e4ce290af37.png)
 
